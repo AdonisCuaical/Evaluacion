@@ -1,0 +1,279 @@
+String dato;
+String mensaje;
+# include <LiquidCrystal.h>
+LiquidCrystal lcd (13, 12, 11, 10, 9, 8);
+void setup() {
+  lcd.begin(16, 2);
+  Serial.begin(9600);
+}
+
+void loop() {
+  
+  if (Serial.available()) {
+  Serial.println("Ingrese palabra a codificar");
+   dato = Serial.readString();
+   dato.toLowerCase(); 
+  int l=dato.length()+1; 
+  char c[l]; 
+  dato.toCharArray(c,l);
+  for(int i=0; i<l; i++){
+    codificacion(c[i]); 
+    if(i==l-1){
+      delay(1000); 
+      lcd.clear(); 
+      }
+    } 
+    
+  }
+}
+void codificacion(char a) {
+  switch (a) {
+    case 'a':
+      mensaje = ".-";
+      break;
+    case 'b':
+      mensaje = "-..." ;
+      break;
+    case 'c':
+      mensaje = "-.-.";
+      break;
+    case 'd':
+      mensaje = "-.." ;
+      break;
+    case 'e':
+      mensaje = "." ;
+      break;
+    case 'f':
+      mensaje = "..-.";
+      break;
+    case 'g':
+      mensaje = "--.";
+      break;
+    case 'h':
+      mensaje = "....";
+      break;
+    case 'i':
+      mensaje = "..";
+      break;
+    case 'j':
+      mensaje = ".---";
+      break;
+    case 'k':
+      mensaje = "-.-";
+      break;
+    case 'l':
+      mensaje = ".-..";
+      break;
+    case 'm':
+      mensaje = "--";
+      break;
+    case 'n':
+      mensaje = "-.";
+      break;
+    case 'o':
+      mensaje = "---";
+      break;
+    case 'p':
+      mensaje = ".--.";
+      break;
+    case 'q':
+      mensaje = "--.-";
+      break;
+    case 'r':
+      mensaje = ".-.";
+      break;
+    case 's':
+      mensaje = "...";
+      break;
+    case 't':
+      mensaje = "-";
+      break;
+    case 'u':
+      mensaje = "..-";
+      break;
+    case 'v':
+      mensaje = "...-";
+      break;
+    case 'w':
+      mensaje = ".--";
+      break;
+    case 'x':
+      mensaje = "-..-";
+      break;
+    case 'y':
+      mensaje = "-.--";
+      break;
+    case 'z':
+      mensaje = "--..";
+      break;
+    case '0':
+      mensaje = "-----";
+      break;
+    case '1':
+      mensaje = ".----";
+      break;
+    case '2':
+      mensaje = "..---";
+      break;
+    case '3':
+      mensaje = "...--";
+      break;
+    case '4':
+      mensaje = "....-";
+      break;
+    case '5':
+      mensaje = ".....";
+      break;
+    case '6':
+      mensaje = "-....";
+      break;
+    case '7':
+      mensaje = "--...";
+      break;
+    case '8':
+      mensaje = "---..";
+      break;
+    case '9':
+      mensaje = "----.";
+      break;
+    default:
+      mensaje = a;
+      break;
+
+  }Serial.print(mensaje); 
+  lcd.print(mensaje); 
+
+
+}
+////////////////////////////////////////////////////////////////////////////////////////
+
+#include <MsTimer2.h>
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(13, 12, 11, 10, 9, 8);
+int segundos;
+int lectura;
+int on = 0;
+int cont = 0;
+void setup() {
+  Serial.begin(9600);
+  lcd.begin(16, 2);
+  MsTimer2::set(1000, contador);
+
+  attachInterrupt(1, encendido, HIGH);
+  MsTimer2::start();
+}
+
+void loop() {
+  if (on == 1) {
+    lectura = analogRead(0);
+    lectura = map(lectura, 0, 1023, 10, 20);
+    lcd.setCursor(12, 0);
+    lcd.print(lectura);
+  }
+  if (on == 2) {
+
+    if (lectura < 10) {
+      lcd.setCursor(2, 1);
+      lcd.print(" ");
+      lcd.setCursor(3, 1);
+      lcd.print(lectura);
+      lcd.setCursor(5, 1);
+      lcd.print(" ");
+      lcd.setCursor(7, 1);
+      lcd.print(" ");
+      lcd.setCursor(9, 1);
+      lcd.print(" ");
+      lcd.setCursor(11, 1);
+      lcd.print(" ");
+      lcd.setCursor(13, 1);
+      lcd.print(" ");
+      lcd.setCursor(15, 1);
+      lcd.print(" ");
+
+    } else
+      lcd.setCursor(2, 1);
+    lcd.print(lectura);
+  }
+
+
+}
+void contador() {
+  if (lectura > 0) {
+    lectura--;
+  } else {
+
+  }
+
+} void encendido() {
+  switch (on) {
+    case 0:
+      lcd.clear();
+      lcd.print("Gire pot: ");
+      on++;
+      break;
+    case 1:
+      on++;
+      break;
+    case 2:
+      on = 0;
+      lcd.clear();
+      break;
+  }
+
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+String voc;
+int pos;
+int ord;
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(13, 12, 11, 10, 9, 8);
+void setup() {
+  Serial.begin(9600);
+  lcd.begin(16, 2);
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    Serial.println("Ingrese vocales");
+    delay(1000); 
+    voc = Serial.readString();
+    int l = voc.length() + 1;
+    char vc[l];
+    char ordens[l];
+    voc.toCharArray(vc, l);
+    for (int i = 0; i < l; i++ ) {
+      ord = orden(vc[i]);
+      ordens[ord] = vc[i];
+      }
+    lcd.print(ordens);
+    Serial.println(ordens);
+    delay(1000); 
+    lcd.clear(); 
+      }
+
+} int orden(char vocal) {
+  switch (vocal) {
+    case 'a':
+      pos = 0;
+      break;
+    case 'e':
+      pos = 1;
+      break;
+    case 'i':
+      pos = 2;
+      break;
+    case 'o':
+      pos = 3;
+      break;
+    case 'u':
+      pos = 4;
+      break;
+    default:
+     
+      break;
+  }
+  return pos;
+}
